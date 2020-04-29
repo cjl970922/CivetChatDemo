@@ -8,17 +8,32 @@
 
 #import "ChatRecordTableViewCell.h"
 
+
+
 @implementation ChatRecordTableViewCell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    {
+        if (self= [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+            
+            _rightLabel = [[UILabel alloc]init];
+            [self.contentView addSubview:_rightLabel];
 
-    // Configure the view for the selected state
+        }
+        return self;
+    }
 }
+//- (void)awakeFromNib {
+//    [super awakeFromNib];
+//    // Initialization code
+//}
+//
+//- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+//    [super setSelected:selected animated:animated];
+//
+//    // Configure the view for the selected state
+//}
 
 @end

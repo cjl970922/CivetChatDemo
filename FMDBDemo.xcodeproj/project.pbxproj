@@ -13,6 +13,7 @@
 		6435B414244A9402002FDB00 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6435B413244A9402002FDB00 /* ChatViewController.m */; };
 		647175D5244D829D0044D429 /* m.png in Resources */ = {isa = PBXBuildFile; fileRef = 647175D4244D829D0044D429 /* m.png */; };
 		648EB2432441679C00A27BEA /* sortednames.plist in Resources */ = {isa = PBXBuildFile; fileRef = 648EB2422441679C00A27BEA /* sortednames.plist */; };
+		648F62042452C79700F3CACB /* ChatRecordTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 648F62032452C79700F3CACB /* ChatRecordTableViewCell.m */; };
 		6497A9382445477000D45E47 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6497A9372445477000D45E47 /* Contact.m */; };
 		6497A93B2445482D00D45E47 /* FMDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6497A93A2445482D00D45E47 /* FMDBManager.m */; };
 		6497A9412445625F00D45E47 /* CommonMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 6497A9402445625F00D45E47 /* CommonMethods.m */; };
@@ -27,7 +28,6 @@
 		64EB82A82440678D00D47543 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64EB82A72440678D00D47543 /* Assets.xcassets */; };
 		64EB82AB2440678D00D47543 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64EB82A92440678D00D47543 /* LaunchScreen.storyboard */; };
 		64EB82AE2440678D00D47543 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 64EB82AD2440678D00D47543 /* main.m */; };
-		64EDF8AD24494DF70022085E /* ChatTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 64EDF8AC24494DF70022085E /* ChatTableViewController.m */; };
 		6D545EBC826CEFAE0FD72E3C /* Pods_FMDBDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F7FE18503C0A415EA23B3D /* Pods_FMDBDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +44,8 @@
 		6435B413244A9402002FDB00 /* ChatViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		647175D4244D829D0044D429 /* m.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = m.png; path = "../../../Downloads/ChatHan-master/ChatHan/m.png"; sourceTree = "<group>"; };
 		648EB2422441679C00A27BEA /* sortednames.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = sortednames.plist; path = "../../../Downloads/Beginning iOS 7 Source Code/08 - Sections/Sections/sortednames.plist"; sourceTree = "<group>"; };
+		648F62022452C79700F3CACB /* ChatRecordTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatRecordTableViewCell.h; sourceTree = "<group>"; };
+		648F62032452C79700F3CACB /* ChatRecordTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRecordTableViewCell.m; sourceTree = "<group>"; };
 		6497A9362445477000D45E47 /* Contact.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
 		6497A9372445477000D45E47 /* Contact.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
 		6497A9392445482D00D45E47 /* FMDBManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDBManager.h; sourceTree = "<group>"; };
@@ -66,8 +68,6 @@
 		64EB82AA2440678D00D47543 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		64EB82AC2440678D00D47543 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		64EB82AD2440678D00D47543 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		64EDF8AB24494DF70022085E /* ChatTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatTableViewController.h; sourceTree = "<group>"; };
-		64EDF8AC24494DF70022085E /* ChatTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatTableViewController.m; sourceTree = "<group>"; };
 		84CD8A8B5F5CF27EB95C03EE /* Pods-FMDBDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FMDBDemo.release.xcconfig"; path = "Target Support Files/Pods-FMDBDemo/Pods-FMDBDemo.release.xcconfig"; sourceTree = "<group>"; };
 		84F7FE18503C0A415EA23B3D /* Pods_FMDBDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FMDBDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -91,6 +91,30 @@
 				84CD8A8B5F5CF27EB95C03EE /* Pods-FMDBDemo.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		64074ED12459296900594833 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				64EB829E2440678D00D47543 /* FirstViewController.h */,
+				64EB829F2440678D00D47543 /* FirstViewController.m */,
+				64EB82A12440678D00D47543 /* SecondViewController.h */,
+				64EB82A22440678D00D47543 /* SecondViewController.m */,
+				6435B412244A9401002FDB00 /* ChatViewController.h */,
+				6435B413244A9402002FDB00 /* ChatViewController.m */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		64074ED324592A2100594833 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				6497A9362445477000D45E47 /* Contact.h */,
+				6497A9372445477000D45E47 /* Contact.m */,
+				64060C3B244ACD0200B3F5D1 /* MessageModel.h */,
+				64060C3C244ACD0200B3F5D1 /* MessageModel.m */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		64EB828F2440678D00D47543 = {
@@ -123,18 +147,12 @@
 				64060C3E244ADD5300B3F5D1 /* Constant.h */,
 				64EB829B2440678D00D47543 /* AppDelegate.h */,
 				64EB829C2440678D00D47543 /* AppDelegate.m */,
-				64EB829E2440678D00D47543 /* FirstViewController.h */,
-				64EB829F2440678D00D47543 /* FirstViewController.m */,
-				64EB82A12440678D00D47543 /* SecondViewController.h */,
-				64EB82A22440678D00D47543 /* SecondViewController.m */,
-				6435B412244A9401002FDB00 /* ChatViewController.h */,
-				6435B413244A9402002FDB00 /* ChatViewController.m */,
+				64074ED12459296900594833 /* ViewController */,
+				64074ED324592A2100594833 /* Model */,
 				64060C38244AB25E00B3F5D1 /* MessageCell.h */,
 				64060C39244AB25E00B3F5D1 /* MessageCell.m */,
-				64060C3B244ACD0200B3F5D1 /* MessageModel.h */,
-				64060C3C244ACD0200B3F5D1 /* MessageModel.m */,
-				6497A9362445477000D45E47 /* Contact.h */,
-				6497A9372445477000D45E47 /* Contact.m */,
+				648F62022452C79700F3CACB /* ChatRecordTableViewCell.h */,
+				648F62032452C79700F3CACB /* ChatRecordTableViewCell.m */,
 				6497A9392445482D00D45E47 /* FMDBManager.h */,
 				6497A93A2445482D00D45E47 /* FMDBManager.m */,
 				6497A93F2445625F00D45E47 /* CommonMethods.h */,
@@ -146,8 +164,6 @@
 				64EB82A92440678D00D47543 /* LaunchScreen.storyboard */,
 				64EB82AC2440678D00D47543 /* Info.plist */,
 				64EB82AD2440678D00D47543 /* main.m */,
-				64EDF8AB24494DF70022085E /* ChatTableViewController.h */,
-				64EDF8AC24494DF70022085E /* ChatTableViewController.m */,
 			);
 			path = FMDBDemo;
 			sourceTree = "<group>";
@@ -283,10 +299,10 @@
 				64EB82A32440678D00D47543 /* SecondViewController.m in Sources */,
 				6497A9412445625F00D45E47 /* CommonMethods.m in Sources */,
 				64EB829D2440678D00D47543 /* AppDelegate.m in Sources */,
-				64EDF8AD24494DF70022085E /* ChatTableViewController.m in Sources */,
 				6497A93B2445482D00D45E47 /* FMDBManager.m in Sources */,
 				64060C3A244AB25E00B3F5D1 /* MessageCell.m in Sources */,
 				6497A9382445477000D45E47 /* Contact.m in Sources */,
+				648F62042452C79700F3CACB /* ChatRecordTableViewCell.m in Sources */,
 				64EB82AE2440678D00D47543 /* main.m in Sources */,
 				64EB82A02440678D00D47543 /* FirstViewController.m in Sources */,
 				64060C41244AE7BF00B3F5D1 /* UIImage+ShowSize.m in Sources */,
