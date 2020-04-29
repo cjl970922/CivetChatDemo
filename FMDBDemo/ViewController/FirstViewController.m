@@ -10,7 +10,6 @@
 #import <FMDB/FMDB.h>
 #import "Contact.h"
 #import "CommonMethods.h"
-#import "ChatTableViewController.h"
 #import "ChatViewController.h"
 
 static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
@@ -18,15 +17,18 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
 @interface FirstViewController ()
 
 
-@property (copy, nonatomic) NSArray *keys;
-@property (copy, nonatomic) NSDictionary *dict;
+@property (copy, nonatomic) NSArray *keys;   //索引字母s组
+@property (copy, nonatomic) NSDictionary *dict; //存放数据的字典
 @property(nonatomic,strong) FMDatabase *db;
 @property(nonatomic, strong)UITableView *tableView;
+@property (copy, nonatomic)   NSMutableArray *allContactName;
 
 @end
 
 @implementation FirstViewController{
     NSMutableArray *filteredNames;
+    
+  //  NSMutableArray *allContactName;
     UISearchDisplayController *searchController;
 }
 
@@ -82,9 +84,9 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
  {
                  NSString *name = [CommonMethods generateTradeNO];
                  // executeUpdate : 不确定的参数用?来占位
+                    //整型数字 要用@()
                  [self.db executeUpdate:@"INSERT INTO t_student (name, sex) VALUES (?, ?);", name, @(arc4random_uniform(2))];
-                 //        [self.db executeUpdate:@"INSERT INTO t_student (name, age) VALUES (?, ?);" withArgumentsInArray:@[name, @(arc4random_uniform(40))]];
-        
+     
                  // executeUpdateWithFormat : 不确定的参数用%@、%d等来占位
                  //        [self.db executeUpdateWithFormat:@"INSERT INTO t_student (name, age) VALUES (%@, %d);", name, arc4random_uniform(40)];
 }
@@ -129,10 +131,14 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
         Contact *contact = [[Contact alloc]init];
         contact.name = name;
         contact.sex = sex;
-
-        NSLog(@"%d %@ %d", ID, name, sex);
-
+        contact.ID = ID;
         
+        _allContactName = [[NSMutableArray alloc]init];
+        [_allContactName addObject:name];
+       
+        NSLog(@"%d %@ %d", ID, name, sex);
+        
+        //首字母为key value为contact对象组成的数组  
         NSString *firstAsKey =[CommonMethods firstCharactorWithString:name];
         if ([keyArray count] == 0 ||![keyArray containsObject:firstAsKey] ) {
             [keyArray addObject:firstAsKey];
@@ -161,6 +167,7 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
             NSLog(@"%@", contact.name);
         }
     }
+    //把首字母按字母表排序
     self.keys = [[self.dict allKeys] sortedArrayUsingSelector:
                  @selector(compare:)];
 
@@ -211,6 +218,7 @@ titleForHeaderInSection:(NSInteger)section
         Contact *contact = [[Contact alloc]init];
         contact =nameSection[indexPath.row];
         cell.textLabel.text = contact.name;
+        cell.tag =contact.ID;
         if (contact.sex == 1) {
                         cell.imageView.image = [UIImage imageNamed:@"man"];
                     }
@@ -257,7 +265,7 @@ titleForHeaderInSection:(NSInteger)section
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     
     chatViewController.title =cell.textLabel.text;
-
+    chatViewController.talkerID = cell.tag;
    
     [[self navigationController]pushViewController:chatViewController animated:YES];
 }
@@ -271,25 +279,30 @@ titleForHeaderInSection:(NSInteger)section
       forCellReuseIdentifier:SectionsTableIdentifier];
 }
 
-
+//字典里面是对象。所以查不到
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller
 shouldReloadTableForSearchString:(NSString *)searchString
 {
     [filteredNames removeAllObjects];
     if (searchString.length > 0) {
-        NSPredicate *predicate =
-        [NSPredicate predicateWithBlock:^BOOL(NSString *name, NSDictionary *b) {
-             NSRange range = [name rangeOfString:searchString
-                                         options:NSCaseInsensitiveSearch];
-             return range.location != NSNotFound;
-         }];
-        for (NSString *key in self.keys) {
-//            NSArray *matches = [self.names[key]
+//        NSPredicate *predicate =
+//        [NSPredicate predicateWithBlock:^BOOL(NSString *name, NSDictionary *b) {
+//             NSRange range = [name rangeOfString:searchString
+//                                         options:NSCaseInsensitiveSearch];
+//             return range.location != NSNotFound;
+//         }];
+         NSPredicate *preicate = [NSPredicate predicateWithFormat:@"SELF CONTAINS[c] %@", searchString];
+//        for (NSString *key in self.keys) {
+////            NSArray *matches = [self.names[key]
+////                                filteredArrayUsingPredicate: predicate];
+//            NSArray *matches = [self.dict[key]
 //                                filteredArrayUsingPredicate: predicate];
-            NSArray *matches = [self.dict[key]
-                                filteredArrayUsingPredicate: predicate];
-            [filteredNames addObjectsFromArray:matches];
-        }
+//            [filteredNames addObjectsFromArray:matches];
+//        }
+        
+        NSArray *matches = [_allContactName filteredArrayUsingPredicate:preicate];
+        [filteredNames addObjectsFromArray:matches];
+
     }
     return YES;
 }
@@ -304,9 +317,7 @@ shouldReloadTableForSearchString:(NSString *)searchString
     FMDatabase *db = [FMDatabase databaseWithPath:path];
     
     if ([db open]) {
-        //性别这里只能为0和1 待改
-//        NSString *createTableSqlString = @"CREATE TABLE IF NOT EXISTS T_contact(id integer PRIMARY KEY AUTOINCREMENT, name text NOT NULL  sex integer NOT NULL)";
-        
+
         NSString *createTableSqlString = @"CREATE TABLE IF NOT EXISTS t_student (id integer PRIMARY KEY AUTOINCREMENT, name text NOT NULL, sex integer NOT NULL)";
         [db executeUpdate:createTableSqlString];
         

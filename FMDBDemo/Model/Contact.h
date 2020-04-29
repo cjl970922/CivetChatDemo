@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface Contact : NSObject
 
 @property (nonatomic, assign) int sex;
-
+@property (nonatomic, assign) NSInteger ID;
 @property (nonatomic, copy) NSString *name;
 
 @end

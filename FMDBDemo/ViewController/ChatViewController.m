@@ -21,8 +21,7 @@
 @property(nonatomic,strong) FMDatabase *db;
 
 
-
-@property (nonatomic,strong) NSMutableArray *dataArrayOfRecord;
+//@property (nonatomic,strong) NSMutableArray *dataArrayOfRecord;
 
 @end
 
@@ -38,6 +37,7 @@
     [self executeFMDB];
 
     [self getData];
+   // [self query];
     
 //    MessageModel *model = [[MessageModel alloc]init];
 //    model.showMessageTime = YES;
@@ -101,7 +101,6 @@
 
 -(void)keyboardWillShow:(NSNotification *)aNotification
 {
-    NSLog(@"111");
     NSDictionary *userInfo = [aNotification userInfo];
     NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardRect = [aValue CGRectValue];
@@ -141,13 +140,16 @@
         textView.text = @"";
         
         
-        if ([self.db executeUpdate:@"INSERT INTO t_message (messagetype,messagesendertype,messagetime,messagetext,talker) VALUES (1, 1,'2020年5月20日 22:20',?,1);", model.messageText]) {
+        if ([self.db executeUpdate:@"INSERT INTO t_message (messagetype,messagesendertype,messagetime,messagetext,talker) VALUES (1, 1,'2020年5月20日 22:20',?,?);", model.messageText,@(self.talkerID)]) {
+            
              NSLog(@"插入数据成功");
         }
         else
         {
             NSLog(@"插入数据失败");
         }
+
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"ReloadData" object:nil];
 
         return NO;
     }
@@ -221,8 +223,9 @@
 
 
 -(void)getData{
+    NSLog(@"结束：%ld",self.talkerID);
     // 1.执行查询语句
-    FMResultSet *resultSet = [self.db executeQuery:@"SELECT * FROM t_message"];
+    FMResultSet *resultSet = [self.db executeQuery:@"SELECT * FROM t_message WHERE talker = ?", @(self.talkerID)];
 
     // 2.遍历结果
     while ([resultSet next]) {
@@ -238,6 +241,23 @@
     }
 }
 
+//查询
+// if ([self.db executeUpdate:@"INSERT INTO t_message (messagetype,messagesendertype,messagetime,messagetext,talker) VALUES (1, 1,'2020年5月20日 22:20',?,2);", model.messageText]) {
+//- (void)query
+//{
+//    NSInteger  inteager = 2;
+//    // 1.执行查询语句
+//    FMResultSet *resultSet = [self.db executeQuery:@"SELECT * FROM t_message WHERE talker = ?",@(inteager)];
+//
+//    // 2.遍历结果
+//    while ([resultSet next]) {
+//        // int ID = [resultSet intForColumn:@"id"];
+//        NSString *name = [resultSet stringForColumn:@"messagetext"];
+//        // int sex = [resultSet intForColumn:@"sex"];
+//        NSLog(@"曹佳龙：%@",name);
+//
+//    }
+//}
 //插入数据
 -(void)insert
 {

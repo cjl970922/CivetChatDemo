@@ -43,6 +43,12 @@ typedef NS_OPTIONS(NSUInteger, MessageSenderType) {
 @property (nonatomic, retain) NSString    *imageUrl;
 @property (nonatomic, strong) UIImage     *imageSmall;
 
+
+//为了第三个页面新加的
+@property (nonatomic,retain) NSString    *sender;
+@property (nonatomic,assign) NSInteger    ID;
+
+
 - (CGRect)timeFrame;
 - (CGRect)logoFrame;
 - (CGRect)messageFrame;

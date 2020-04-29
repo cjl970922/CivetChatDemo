@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ChatViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
 
 @property(nonatomic,strong) NSMutableArray *dataArray;
-
+@property (nonatomic, assign) NSInteger talkerID;
 @end
 
 NS_ASSUME_NONNULL_END

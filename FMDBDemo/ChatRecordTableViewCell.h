@@ -1,8 +1,8 @@
 //
-//  ChatTableViewController.h
+//  ChatRecordTableViewCell.h
 //  FMDBDemo
 //
-//  Created by Civet on 2020/4/17.
+//  Created by Civet on 2020/4/24.
 //  Copyright © 2020年 icivet. All rights reserved.
 //
 
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ChatTableViewController : UITableViewController
+@interface ChatRecordTableViewCell : UITableViewCell
 
 @end
 
