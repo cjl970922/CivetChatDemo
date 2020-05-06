@@ -14,22 +14,24 @@
 
 static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
 
-@interface FirstViewController ()
+@interface FirstViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchControllerDelegate,UISearchResultsUpdating>
 
 
-@property (copy, nonatomic) NSArray *keys;   //索引字母s组
+@property (copy, nonatomic) NSArray *keys;   //索引字母数组
 @property (copy, nonatomic) NSDictionary *dict; //存放数据的字典
 @property(nonatomic,strong) FMDatabase *db;
 @property(nonatomic, strong)UITableView *tableView;
-@property (copy, nonatomic)   NSMutableArray *allContactName;
+
+@property(strong,nonatomic) UISearchController *searchController;
+
+@property(strong,nonatomic) NSMutableArray *dataList; //存放待查找数据的数组
 
 @end
 
 @implementation FirstViewController{
+    
     NSMutableArray *filteredNames;
     
-  //  NSMutableArray *allContactName;
-    UISearchDisplayController *searchController;
 }
 
 - (void)viewDidLoad {
@@ -45,30 +47,23 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
     
     [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:SectionsTableIdentifier];
     
-    
-//    NSString *path = [[NSBundle mainBundle] pathForResource:@"sortednames" ofType:@"plist"];
-    
-//    self.names = [NSDictionary dictionaryWithContentsOfFile:path];
-//    self.keys = [[self.names allKeys] sortedArrayUsingSelector:
-//                 @selector(compare:)];
-    
+    //数组的初始化
     filteredNames = [NSMutableArray array];
     
-    UISearchBar *searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, 320, 44)];
-    searchBar.placeholder = @"想要找什么吗";
-    tableView.tableHeaderView = searchBar;
+    //创建UISearchController
+    self.searchController = [[UISearchController alloc]initWithSearchResultsController:nil];
+    //设置代理
+    self.searchController.delegate = self;
+    self.searchController.searchResultsUpdater= self;
     
-    searchController = [[UISearchDisplayController alloc]initWithSearchBar:searchBar contentsController:self];
-    searchController.delegate = self;
-    searchController.searchResultsDataSource = self;
+    self.tableView.tableHeaderView=self.searchController.searchBar;
     
+
     [self executeSql];
     [self getData];
 
-
+    [self test];
 }
-
-
 
 -(void)pressAddData{
 //       [self delete];
@@ -116,6 +111,8 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
 
 //初始化数据
 -(void)getData{
+    
+    _dataList = [[NSMutableArray alloc]init];
     // 1.执行查询语句
     FMResultSet *resultSet = [self.db executeQuery:@"SELECT * FROM t_student"];
     
@@ -133,10 +130,9 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
         contact.sex = sex;
         contact.ID = ID;
         
-        _allContactName = [[NSMutableArray alloc]init];
-        [_allContactName addObject:name];
-       
         NSLog(@"%d %@ %d", ID, name, sex);
+        
+        [_dataList addObject:contact];
         
         //首字母为key value为contact对象组成的数组  
         NSString *firstAsKey =[CommonMethods firstCharactorWithString:name];
@@ -171,28 +167,38 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
     self.keys = [[self.dict allKeys] sortedArrayUsingSelector:
                  @selector(compare:)];
 
+     NSLog(@"CJL::::%ld",_dataList.count);
 }
 
 #pragma mark - Table View Data Source Methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (tableView.tag == 1) {
-        return [self.keys count];
-    } else {
+//    if (tableView.tag == 1) {
+//        return [self.keys count];
+//    } else {
+//        return 1;
+//    }
+    
+    if (self.searchController.active) {
         return 1;
     }
-
+    else
+    {
+        return [self.keys count];
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section
 {
-    if (tableView.tag == 1) {
+    if (self.searchController.active) {
+        return [filteredNames count];
+    }
+    else
+    {
         NSString *key = self.keys[section];
         NSArray *nameSection = self.dict[key];
         return [nameSection count];
-    } else {
-        return [filteredNames count];
     }
 
 }
@@ -200,10 +206,12 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
 - (NSString *)tableView:(UITableView *)tableView
 titleForHeaderInSection:(NSInteger)section
 {
-    if (tableView.tag == 1) {
-        return self.keys[section];
-    } else {
-        return nil;
+    if (self.searchController.active) {
+       return nil;
+    }
+    else
+    {
+         return self.keys[section];
     }
 }
 
@@ -212,24 +220,32 @@ titleForHeaderInSection:(NSInteger)section
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:SectionsTableIdentifier forIndexPath:indexPath];
     
-    if (tableView.tag == 1) {
+    if (self.searchController.active) {
+        Contact *contact = [[Contact alloc]init];
+        contact = filteredNames[indexPath.row];
+        cell.textLabel.text = contact.name;
+    }
+    else
+    {
         NSString *key = self.keys[indexPath.section];
         NSArray *nameSection = self.dict[key];
         Contact *contact = [[Contact alloc]init];
         contact =nameSection[indexPath.row];
         cell.textLabel.text = contact.name;
         cell.tag =contact.ID;
-        if (contact.sex == 1) {
-                        cell.imageView.image = [UIImage imageNamed:@"man"];
-                    }
-                    else{
-                        cell.imageView.image = [UIImage imageNamed:@"women"];
-                    }
-    } else {
-        cell.textLabel.text = filteredNames[indexPath.row];
-    }
+        
 
+        
+        if (contact.sex == 1) {
+            cell.imageView.image = [UIImage imageNamed:@"man"];
+        }
+        else{
+            cell.imageView.image = [UIImage imageNamed:@"women"];
+        }
+    }
+    
     return cell;
+    
 }
 
 
@@ -246,10 +262,10 @@ titleForHeaderInSection:(NSInteger)section
 //索引
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
-    if (tableView.tag == 1) {
-        return self.keys;
-    } else {
+    if (self.searchController.active) {
         return nil;
+    } else {
+        return self.keys;
     }
 }
 
@@ -272,41 +288,70 @@ titleForHeaderInSection:(NSInteger)section
 
 
 #pragma mark - Search Display Delegate Methods
-- (void)searchDisplayController:(UISearchDisplayController *)controller
-  didLoadSearchResultsTableView:(UITableView *)tableView
-{
-    [tableView registerClass:[UITableViewCell class]
-      forCellReuseIdentifier:SectionsTableIdentifier];
-}
+-(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
 
-//字典里面是对象。所以查不到
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller
-shouldReloadTableForSearchString:(NSString *)searchString
-{
-    [filteredNames removeAllObjects];
-    if (searchString.length > 0) {
-//        NSPredicate *predicate =
-//        [NSPredicate predicateWithBlock:^BOOL(NSString *name, NSDictionary *b) {
-//             NSRange range = [name rangeOfString:searchString
-//                                         options:NSCaseInsensitiveSearch];
-//             return range.location != NSNotFound;
-//         }];
-         NSPredicate *preicate = [NSPredicate predicateWithFormat:@"SELF CONTAINS[c] %@", searchString];
-//        for (NSString *key in self.keys) {
-////            NSArray *matches = [self.names[key]
-////                                filteredArrayUsingPredicate: predicate];
-//            NSArray *matches = [self.dict[key]
-//                                filteredArrayUsingPredicate: predicate];
-//            [filteredNames addObjectsFromArray:matches];
-//        }
-        
-        NSArray *matches = [_allContactName filteredArrayUsingPredicate:preicate];
-        [filteredNames addObjectsFromArray:matches];
-
+    NSLog(@"---updateSearchResultsForSearchController");
+    NSString *searchString = [self.searchController.searchBar text];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name CONTAINS[c] %@", searchString];
+    if (filteredNames!= nil) {
+        [filteredNames removeAllObjects];
     }
-    return YES;
+    //过滤数据
+    filteredNames = [NSMutableArray arrayWithArray: [_dataList filteredArrayUsingPredicate:predicate]];
+    //刷新表格
+    [self.tableView reloadData];
+
+//    for (NSString *key in self.keys) {
+//
+//    filteredNames= [NSMutableArray arrayWithArray:[self.dict[key] filteredArrayUsingPredicate:preicate]];
+//    }
+//    //刷新表格
+//    [self.tableView reloadData];
+//
+//    NSString *key = self.keys[indexPath.section];
+//    NSArray *nameSection = self.dict[key];
+//    Contact *contact = [[Contact alloc]init];
+//    contact =nameSection[indexPath.row];
+//    cell.textLabel.text = contact.name;
+//    cell.tag =contact.ID;
+//
+//    NSPredicate *preicate = [NSPredicate predicateWithFormat:@"contact.name CONTAINS[c] %@", searchString];
+    
+   // NSPredicate *predicatea = [NSPredicate predicateWithFormat:@"(name COnTAINS[c] %@) "];
+//
 }
 
+-(void)test
+{
+//    NSMutableArray *array = [[NSMutableArray alloc]init];
+//    for (int i = 0; i<5; i++) {
+//        Contact *contact = [[Contact alloc]init];
+//        contact.name = [NSString stringWithFormat:@"cjl:%d",i];
+//        [array addObject:contact];
+//
+//    }
+//    NSString *str = @"1";
+//    NSPredicate *preicate = [NSPredicate predicateWithFormat:@"name CONTAINS[c] %@", str];
+//
+//    for (Contact *contact in array) {
+//        if ([preicate evaluateWithObject:contact]) {
+//            NSLog(@"%@",contact.name);
+//        }
+//    }
+//
+//
+//    NSLog(@"changdu::::::::%ld",array.count);
+    
+    NSString *str = @"C";
+    NSPredicate *preicate = [NSPredicate predicateWithFormat:@"name CONTAINS[c] %@", str];
+
+    for (Contact *contact in _dataList) {
+                if ([preicate evaluateWithObject:contact]) {
+                    NSLog(@"CJL:::::%@",contact.name);
+                }
+    }
+
+}
 #pragma mark - FMDB
 -(void) executeSql{
     NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];

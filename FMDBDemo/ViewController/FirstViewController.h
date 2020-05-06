@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FirstViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, UISearchDisplayDelegate>
-
+@interface FirstViewController : UIViewController
 
 @end
 //玩一下SmartGit

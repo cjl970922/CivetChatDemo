@@ -11,6 +11,7 @@
 #import "MessageModel.h"
 #import "Constant.h"
 #import <FMDB/FMDB.h>
+#import "CommonMethods.h"
 
 @interface ChatViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -130,7 +131,7 @@
         model.messageSenderType = 1;
         model.messageType = 1;
         model.messageText = textView.text;
-        model.messageTime = @"2020年5月20日 22:20";
+        model.messageTime = [CommonMethods getCurrentTime];
         [_dataArray addObject:model];
         [_tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem:_dataArray.count - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
 //        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:_dataArray.count - 1 inSection:0]

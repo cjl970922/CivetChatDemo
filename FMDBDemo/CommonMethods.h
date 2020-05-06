@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (CGSize)labelAutoCalculateRectWith:(NSString *)text Font:(UIFont *)textFont MaxSize:(CGSize)maxSize;
 
+
++(NSString *)getCurrentTime;
 //+ (CGSize)imageShowSize;
 
 @end

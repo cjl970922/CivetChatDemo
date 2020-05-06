@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SearchResultCell : UITableViewCell
 
+@property (nonatomic, assign) NSInteger id;
 @end
 
 NS_ASSUME_NONNULL_END

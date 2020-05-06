@@ -16,6 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger ID;
 @property (nonatomic, copy) NSString *name;
 
+
+
+@property (nonatomic, copy) NSString *record;
+
 @end
 
 NS_ASSUME_NONNULL_END

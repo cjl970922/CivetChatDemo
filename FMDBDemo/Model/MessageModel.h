@@ -46,7 +46,7 @@ typedef NS_OPTIONS(NSUInteger, MessageSenderType) {
 
 //为了第三个页面新加的
 @property (nonatomic,retain) NSString    *sender;
-@property (nonatomic,assign) NSInteger    ID;
+@property (nonatomic,assign) NSInteger    ID;   //聊天对象ID 和name 一样 不是聊天记录ID
 
 
 - (CGRect)timeFrame;

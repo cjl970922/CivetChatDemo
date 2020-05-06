@@ -44,6 +44,16 @@
     return rect.size;
 }
 
++ (NSString *)getCurrentTime{
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"YYYY年MM月dd日 HH:mm"];
+    
+    NSDate *date = [NSDate date];
+    NSString *datestr = [formatter stringFromDate:date];
+    NSLog(@"当前时间是：%@",datestr);
+    return datestr;
+}
 
 
 @end

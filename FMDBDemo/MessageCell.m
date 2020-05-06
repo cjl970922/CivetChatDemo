@@ -133,6 +133,9 @@
             _messageLabel.textAlignment = NSTextAlignmentLeft;
             break;
         
+        case MessageTypeVoice:
+            NSLog(@"haimeikaifa");
+            break;
         case MessageTypeImage:
             _imageImageView.hidden = NO;
             _imageImageView.frame = [messageModel imageFrame];

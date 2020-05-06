@@ -14,6 +14,9 @@
 #import "MessageModel.h"
 #import "ChatViewController.h"
 
+#import "Contact.h"
+#import "SearchResultViewController.h"
+
 @interface SecondViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchControllerDelegate,UISearchResultsUpdating>
 
 @property(strong,nonatomic) UISearchController *searchController;
@@ -27,19 +30,19 @@
 
 @property(nonatomic,strong) FMDatabase *db;
 
-
+@property(strong,nonatomic) NSMutableArray *queryList;
 @end
 
 @implementation SecondViewController
 
 
-- (UISearchController *)searchController
-{
-    if (!_searchController) {
-        _searchController = [[UISearchController alloc]init];
-    }
-    return _searchController;
-}
+//- (UISearchController *)searchController
+//{
+//    if (!_searchController) {
+//        _searchController = [[UISearchController alloc]init];
+//    }
+//    return _searchController;
+//}
 
 - (UITableView *)tableView
 {
@@ -59,6 +62,8 @@
     _dataList = [[NSMutableArray alloc]init];
     _searchList = [[NSMutableArray alloc]init];
     
+    
+    _queryList = [[NSMutableArray alloc]init];
     
     [self executeFMDB];
     [self getData];
@@ -87,14 +92,16 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    self.searchController = [[UISearchController alloc]initWithSearchResultsController:nil];
-    self.searchController.delegate= self;
-    self.searchController.searchResultsUpdater;
-
     
+    SearchResultViewController *resultVC = [[SearchResultViewController alloc] initWithStyle:UITableViewStylePlain];
+    self.searchController = [[UISearchController alloc]initWithSearchResultsController:resultVC];
+    self.searchController.delegate= self;
+    self.searchController.searchResultsUpdater =self;
     self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.definesPresentationContext = YES; // 这是push成功的关键
     [self.view addSubview:self.tableView];
     
+
 
 }
 
@@ -168,7 +175,26 @@
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
+      NSString *keyword = searchController.searchBar.text;
     
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name CONTAINS[c] %@", keyword];
+    NSArray *fliter = [_queryList filteredArrayUsingPredicate:predicate];
+    
+    NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"record CONTAINS[c] %@", keyword];
+    NSArray *fliter2 = [_queryList filteredArrayUsingPredicate:predicate2];
+    
+    NSLog(@"CCCC::::%ld",fliter2.count);
+    NSLog(@"CCCC111::::%ld",fliter.count);
+    
+    
+    SearchResultViewController *resultVC = (SearchResultViewController*)searchController.searchResultsController;
+    
+    resultVC.resultArray = fliter;
+    
+    resultVC.resultArrayRecord = fliter2;
+    
+    [resultVC.tableView reloadData];
 }
 
 -(void) executeFMDB{
@@ -208,6 +234,20 @@
         
         [_dataList addObject:model];
     }
+        NSLog(@"曹佳龙000：%ld",_dataList.count);
+    
+    FMResultSet *result = [self.db executeQuery:@"select t_student.id,t_student.name,t_message.messagetext FROM t_message left join t_student on t_message.talker = t_student.id"];
+    
+    while ([result next]) {
+        
+        Contact *model = [[Contact alloc]init];
+        model.ID = [result intForColumn:@"id"];
+        model.name = [result stringForColumn:@"name"];
+        model.record = [result stringForColumn:@"messagetext"];
+        
+        [_queryList addObject:model];
+    }
+    NSLog(@"曹佳龙：%ld",_queryList.count);
 }
 
 @end

@@ -8,6 +8,10 @@
 
 #import "SearchResultViewController.h"
 
+#import "Contact.h"
+#import "SearchResultCell.h"
+#import "ChatViewController.h"
+
 @interface SearchResultViewController ()
 
 @end
@@ -27,24 +31,69 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Incomplete implementation, return the number of sections
-    return 0;
+
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete implementation, return the number of rows
+    
+    if (section == 0) {
+        return self.resultArray.count;
+    }
+    if (section ==1) {
+        return self.resultArrayRecord.count;
+    }
     return 0;
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    static NSString * const identifier = @"Cell";
+    SearchResultCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (cell == nil) {
+        cell = [[SearchResultCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+    }
     
-    // Configure the cell...
-    
+    if (indexPath.section == 0) {
+        Contact *model = self.resultArray[indexPath.row];
+        cell.textLabel.text = model.name;
+        cell.imageView.image = [UIImage imageNamed:@"man"];
+        cell.id = model.ID;
+    }
+    if (indexPath.section == 1) {
+        Contact *model = self.resultArrayRecord[indexPath.row];
+        cell.imageView.image = [UIImage imageNamed:@"man"];
+        cell.textLabel.text = model.name;
+        cell.detailTextLabel.text = model.record;
+        cell.id = model.ID;
+        
+    }
+
     return cell;
 }
-*/
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    // 点击搜索结果内容push到下一个页面
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    
+    ChatViewController *chatViewController = [[ChatViewController alloc]init];
+
+    chatViewController = [storyboard instantiateViewControllerWithIdentifier:@"22"];
+    
+    SearchResultCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    
+    chatViewController.title =cell.textLabel.text;
+    chatViewController.talkerID = cell.id;
+    
+    [self.presentingViewController.navigationController pushViewController:chatViewController animated:YES];
+    
+    
+    
+    
+}
 
 /*
 // Override to support conditional editing of the table view.
