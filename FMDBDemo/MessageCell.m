@@ -50,6 +50,8 @@
 
 #pragma mark - 创建子视图
 
+//初始化initz这些
+
 -(void)creatSubViewMessage
 {
     _messageLabel  = [[UILabel alloc]init];
@@ -139,6 +141,15 @@
         case MessageTypeImage:
             _imageImageView.hidden = NO;
             _imageImageView.frame = [messageModel imageFrame];
+            
+
+            NSString *str = messageModel.messageText;
+            NSLog(@"输出：：%@",str);
+            NSURL *url = [NSURL URLWithString:str];
+            NSData *data = [NSData dataWithContentsOfURL:url];
+            messageModel.imageSmall = [UIImage imageWithData:data];
+
+
             _imageImageView.image = messageModel.imageSmall;
             CGSize imageSize = [messageModel.imageSmall imageShowSize];
             UIImageView *imageViewMask = [[UIImageView alloc]initWithImage:[[UIImage imageNamed:_messageModel.messageSenderType == MessageSenderTypeMe ? @"me" :@"other"]stretchableImageWithLeftCapWidth:20 topCapHeight:40]];

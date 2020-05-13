@@ -12,6 +12,8 @@
 #import "SearchResultCell.h"
 #import "ChatViewController.h"
 
+#import "Constant.h"
+
 @interface SearchResultViewController ()
 
 @end
@@ -21,6 +23,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+ //   self.tableView.backgroundColor  =[UIColor redColor];
+    //导航栏距离tablebviewj顶部有一定高度bug,的解决办法
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    UIEdgeInsets contentInset = self.tableView.contentInset;
+    contentInset.top = 50;
+    [self.tableView setContentInset:contentInset];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -72,6 +80,18 @@
     }
 
     return cell;
+}
+
+- (NSString *)tableView:(UITableView *)tableView
+titleForHeaderInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return @"联系人";
+    }
+    else
+    {
+        return @"聊天记录";
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

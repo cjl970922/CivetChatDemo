@@ -21,9 +21,7 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
 @property (copy, nonatomic) NSDictionary *dict; //存放数据的字典
 @property(nonatomic,strong) FMDatabase *db;
 @property(nonatomic, strong)UITableView *tableView;
-
 @property(strong,nonatomic) UISearchController *searchController;
-
 @property(strong,nonatomic) NSMutableArray *dataList; //存放待查找数据的数组
 
 @end
@@ -45,6 +43,9 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
     UITableView * tableView = [self.view viewWithTag:1];
     self.tableView = tableView;
     
+//    UIEdgeInsets contentInset = self.tableView.contentInset;
+//    contentInset.top = 20;
+    
     [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:SectionsTableIdentifier];
     
     //数组的初始化
@@ -61,8 +62,6 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
 
     [self executeSql];
     [self getData];
-
-    [self test];
 }
 
 -(void)pressAddData{
@@ -130,17 +129,17 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
         contact.sex = sex;
         contact.ID = ID;
         
-        NSLog(@"%d %@ %d", ID, name, sex);
+    //    NSLog(@"%d %@ %d", ID, name, sex);
         
         [_dataList addObject:contact];
         
         //首字母为key value为contact对象组成的数组  
         NSString *firstAsKey =[CommonMethods firstCharactorWithString:name];
         if ([keyArray count] == 0 ||![keyArray containsObject:firstAsKey] ) {
-            [keyArray addObject:firstAsKey];
+            [keyArray addObject:firstAsKey];  //不存在首字母的key就放进数组用于判断
             NSMutableArray *array = [[NSMutableArray alloc]init];
             [array addObject:contact];
-            [dic setValue:array forKey:firstAsKey];
+            [dic setValue:array forKey:firstAsKey];  //value : 包含模型数据的数组。 key:首字母
         }
         else{
             NSMutableArray *array = [dic valueForKey:firstAsKey];
@@ -152,8 +151,10 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
 
     self.dict = [NSDictionary dictionaryWithDictionary:dic];
     NSLog(@"%lu",[self.dict count]);
-    NSArray *keys = [self.dict allKeys];
     
+    /*输出看看
+    NSArray *keys = [self.dict allKeys];
+     
     for (int i = 0; i<self.dict.count; i++)
     {
         NSString *key = keys[i];
@@ -163,6 +164,8 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
             NSLog(@"%@", contact.name);
         }
     }
+     */
+    
     //把首字母按字母表排序
     self.keys = [[self.dict allKeys] sortedArrayUsingSelector:
                  @selector(compare:)];
@@ -173,12 +176,7 @@ static NSString *SectionsTableIdentifier = @"SectionsTableIdentifier";
 #pragma mark - Table View Data Source Methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-//    if (tableView.tag == 1) {
-//        return [self.keys count];
-//    } else {
-//        return 1;
-//    }
-    
+
     if (self.searchController.active) {
         return 1;
     }
@@ -251,12 +249,20 @@ titleForHeaderInSection:(NSInteger)section
 
  - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 1;
+    return 0.01;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 30;
+    
+    if (self.searchController.active) {
+        return 0.01;
+    }
+    else
+    {
+        return 15;
+    }
+    return 0;
 }
 
 //索引
@@ -274,7 +280,6 @@ titleForHeaderInSection:(NSInteger)section
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     
     ChatViewController *chatViewController = [[ChatViewController alloc]init];
-//  ChatTableViewController *chatTableViewController = [[ChatTableViewController alloc]init];
 //  chatTableViewController.hidesBottomBarWhenPushed = YES; 在storyboard中可以t勾选
     chatViewController = [storyboard instantiateViewControllerWithIdentifier:@"22"];
     
@@ -300,60 +305,12 @@ titleForHeaderInSection:(NSInteger)section
     filteredNames = [NSMutableArray arrayWithArray: [_dataList filteredArrayUsingPredicate:predicate]];
     //刷新表格
     [self.tableView reloadData];
-
-//    for (NSString *key in self.keys) {
-//
-//    filteredNames= [NSMutableArray arrayWithArray:[self.dict[key] filteredArrayUsingPredicate:preicate]];
-//    }
-//    //刷新表格
-//    [self.tableView reloadData];
-//
-//    NSString *key = self.keys[indexPath.section];
-//    NSArray *nameSection = self.dict[key];
-//    Contact *contact = [[Contact alloc]init];
-//    contact =nameSection[indexPath.row];
-//    cell.textLabel.text = contact.name;
-//    cell.tag =contact.ID;
-//
-//    NSPredicate *preicate = [NSPredicate predicateWithFormat:@"contact.name CONTAINS[c] %@", searchString];
-    
-   // NSPredicate *predicatea = [NSPredicate predicateWithFormat:@"(name COnTAINS[c] %@) "];
-//
 }
 
--(void)test
-{
-//    NSMutableArray *array = [[NSMutableArray alloc]init];
-//    for (int i = 0; i<5; i++) {
-//        Contact *contact = [[Contact alloc]init];
-//        contact.name = [NSString stringWithFormat:@"cjl:%d",i];
-//        [array addObject:contact];
-//
-//    }
-//    NSString *str = @"1";
-//    NSPredicate *preicate = [NSPredicate predicateWithFormat:@"name CONTAINS[c] %@", str];
-//
-//    for (Contact *contact in array) {
-//        if ([preicate evaluateWithObject:contact]) {
-//            NSLog(@"%@",contact.name);
-//        }
-//    }
-//
-//
-//    NSLog(@"changdu::::::::%ld",array.count);
-    
-    NSString *str = @"C";
-    NSPredicate *preicate = [NSPredicate predicateWithFormat:@"name CONTAINS[c] %@", str];
 
-    for (Contact *contact in _dataList) {
-                if ([preicate evaluateWithObject:contact]) {
-                    NSLog(@"CJL:::::%@",contact.name);
-                }
-    }
-
-}
 #pragma mark - FMDB
 -(void) executeSql{
+    
     NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
     NSString *path = [docPath stringByAppendingPathComponent:@"contact.sqlite"];
     NSLog(@"path = %@",path);
@@ -365,12 +322,10 @@ titleForHeaderInSection:(NSInteger)section
 
         NSString *createTableSqlString = @"CREATE TABLE IF NOT EXISTS t_student (id integer PRIMARY KEY AUTOINCREMENT, name text NOT NULL, sex integer NOT NULL)";
         [db executeUpdate:createTableSqlString];
-        
-        
     }
     else{
         NSLog(@"fail to open database");
-    }
+        }
     self.db=db;
     
 }

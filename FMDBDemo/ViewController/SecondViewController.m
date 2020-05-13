@@ -98,7 +98,7 @@
     self.searchController.delegate= self;
     self.searchController.searchResultsUpdater =self;
     self.tableView.tableHeaderView = self.searchController.searchBar;
-    self.definesPresentationContext = YES; // 这是push成功的关键
+  //  self.definesPresentationContext = YES; // 这是push成功的关键,也会出现下移64的问题
     [self.view addSubview:self.tableView];
     
 
@@ -160,8 +160,7 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     
     ChatViewController *chatViewController = [[ChatViewController alloc]init];
-    //  ChatTableViewController *chatTableViewController = [[ChatTableViewController alloc]init];
-    //  chatTableViewController.hidesBottomBarWhenPushed = YES; 在storyboard中可以t勾选
+
     chatViewController = [storyboard instantiateViewControllerWithIdentifier:@"22"];
     
     ChatRecordTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];

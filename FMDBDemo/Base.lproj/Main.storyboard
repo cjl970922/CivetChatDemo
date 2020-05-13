@@ -18,9 +18,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="GJx-kQ-gJJ">
+                            <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GJx-kQ-gJJ">
                                 <rect key="frame" x="0.0" y="64" width="375" height="554"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <outlet property="dataSource" destination="9pv-A4-QxB" id="QbO-Hd-HOC"/>
                                     <outlet property="delegate" destination="9pv-A4-QxB" id="b3B-E4-d9W"/>
@@ -76,7 +76,11 @@
                                     </barButtonItem>
                                     <barButtonItem title="emoji" image="emoji" id="t5z-0z-zbA"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="7L9-sW-Axg"/>
-                                    <barButtonItem title="image" image="image" id="qyw-13-WX6"/>
+                                    <barButtonItem title="image" image="image" id="qyw-13-WX6">
+                                        <connections>
+                                            <action selector="selectPicture:" destination="jh0-Jj-lbO" id="Lfh-5h-Mo7"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gOG-lL-9WO">
@@ -110,7 +114,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gkt-rv-qsM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4040.8000000000002" y="-284.70764617691157"/>
+            <point key="canvasLocation" x="2457" y="-64"/>
         </scene>
         <!--Second View Controller-->
         <scene sceneID="wg7-f3-ORb">

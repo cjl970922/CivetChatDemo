@@ -13,5 +13,11 @@
 @property (strong, nonatomic) UIWindow *window;
 
 
+
+/* 搜索searchcontroller 可以封装起来
+    FMDB也可以
+ */
+
+
 @end
 

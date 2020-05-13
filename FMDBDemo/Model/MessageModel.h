@@ -28,6 +28,8 @@ typedef NS_OPTIONS(NSUInteger, MessageSenderType) {
 
 @interface MessageModel : NSObject
 
+//@property (nonatomic,assign) NSURL * url1;
+//@property (nonatomic , assign) NSData* data1;
 @property (nonatomic,assign) MessageType messageType;
 @property (nonatomic, assign) MessageSenderType messageSenderType;
 
@@ -43,11 +45,9 @@ typedef NS_OPTIONS(NSUInteger, MessageSenderType) {
 @property (nonatomic, retain) NSString    *imageUrl;
 @property (nonatomic, strong) UIImage     *imageSmall;
 
-
-//为了第三个页面新加的
+//为了第三个页面新加
 @property (nonatomic,retain) NSString    *sender;
 @property (nonatomic,assign) NSInteger    ID;   //聊天对象ID 和name 一样 不是聊天记录ID
-
 
 - (CGRect)timeFrame;
 - (CGRect)logoFrame;

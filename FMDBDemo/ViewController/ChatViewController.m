@@ -14,6 +14,7 @@
 #import "CommonMethods.h"
 
 @interface ChatViewController ()
+<UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
@@ -84,17 +85,12 @@
 //    [_dataArray addObject:model];
 //
 
-    
     _tableView.separatorColor = [UIColor clearColor];
-  //  _tableView.backgroundColor = [UIColor redColor];
     _tableView.backgroundColor = [[UIColor alloc] initWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1];
-    
-    
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(KeyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    
     
 //    [self insert];
 }
@@ -141,7 +137,7 @@
         textView.text = @"";
         
         
-        if ([self.db executeUpdate:@"INSERT INTO t_message (messagetype,messagesendertype,messagetime,messagetext,talker) VALUES (1, 1,'2020年5月20日 22:20',?,?);", model.messageText,@(self.talkerID)]) {
+        if ([self.db executeUpdate:@"INSERT INTO t_message (messagetype,messagesendertype,messagetime,messagetext,talker) VALUES (1, 1,?,?,?);",[CommonMethods getCurrentTime], model.messageText,@(self.talkerID)]) {
             
              NSLog(@"插入数据成功");
         }
@@ -165,6 +161,63 @@
     [self.navigationController popViewControllerAnimated:YES];
     
 }
+
+- (IBAction)selectPicture:(id)sender {
+    NSLog(@"caojialong shuaige");
+    
+    UIImagePickerController *picker = [[UIImagePickerController alloc]init];
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.delegate = self;
+    picker.allowsEditing = YES;
+    [self presentViewController:picker animated:YES completion:NULL];
+    
+}
+- (void)imagePickerController:(UIImagePickerController *)picker
+didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+
+    NSURL *url = info[UIImagePickerControllerImageURL];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+ //   UIImage *image  = [UIImage imageWithData:data];
+    
+    
+    NSString *str = [url absoluteString];
+    NSLog(@"^^:)%@",str);
+    NSLog(@"hhhh:%@",data);
+    MessageModel *model = [[MessageModel alloc] init];
+    
+    model.showMessageTime=YES;
+    model.messageSenderType = 1;
+    model.messageType = 3;
+    model.messageTime = [CommonMethods getCurrentTime];
+    model.imageSmall = [UIImage imageWithData:data];
+    model.messageText = @"[图片]";
+    
+    [_dataArray addObject:model];
+    [_tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem:_dataArray.count - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    
+    if ([self.db executeUpdate:@"INSERT INTO t_message (messagetype,messagesendertype,messagetime,messagetext,talker) VALUES (3, 1,?,?,?);",model.messageTime, str,@(self.talkerID)]) {
+        
+        NSLog(@"插入数据成功");
+    }
+    else
+    {
+        NSLog(@"插入数据失败");
+    }
+    
+    
+    
+    
+    [picker dismissViewControllerAnimated:YES completion:NULL];
+}
+
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:NULL];
+    
+}
+
 
 #pragma mark - Table View Methods
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -231,14 +284,42 @@
     // 2.遍历结果
     while ([resultSet next]) {
 
+        
         MessageModel *model = [[MessageModel alloc]init];
         model.showMessageTime = YES;
         model.messageTime = [resultSet stringForColumn:@"messagetime"];
         model.messageSenderType = [resultSet intForColumn:@"messagesendertype"];
         model.messageType = [resultSet intForColumn:@"messagetype"];
-        model.messageText = [resultSet stringForColumn:@"messagetext"];
+     //   model.messageText = [resultSet stringForColumn:@"messagetext"];
+        
+        
+        if (model.messageType == 3) {
+            model.messageText = @"[图片]";
+            NSString *str = [resultSet stringForColumn:@"messagetext"];
+            NSLog(@"3333:%@",str);
+            NSURL *url  = [NSURL URLWithString:str];
+            NSData *data = [NSData dataWithContentsOfURL:url];
+            model.imageSmall = [UIImage imageWithData:data];
+        }
+        else{
+            model.messageText = [resultSet stringForColumn:@"messagetext"];
+        }
+        
+        
+        
+        //35    3    1    2020年05月08日 14:52    file:///Users/civet/Library/Developer/CoreSimulator/Devices/A11E157A-B551-46DA-951C-6112CEF56142/data/Containers/Data/Application/558E9B05-157F-486D-87EB-AD8815A87485/tmp/1F4991F8-4D5C-4285-A262-C69307F31DB3.jpeg    1
+
         
         [_dataArray addObject:model];
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
 }
 
