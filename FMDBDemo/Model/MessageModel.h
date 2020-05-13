@@ -24,7 +24,7 @@ typedef NS_OPTIONS(NSUInteger, MessageSenderType) {
     MessageSenderTypeOther
 };
 
-
+//gi tceshi
 
 @interface MessageModel : NSObject
 
